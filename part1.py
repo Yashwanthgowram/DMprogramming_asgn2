@@ -91,17 +91,15 @@ def compute():
 
 
     Kmeans_dict_plotting={}
-    for dataset_key in answers['1A: datasets'].keys():
-        accuracy_list=[]
-        data_cluster={}
-        for count_cluster in [2,3,5,10]:
-            predictions=dct(answers['1A: datasets'][dataset_key][0],answers['1A: datasets'][dataset_key][1],count_cluster,42)
-            data_cluster[count_cluster]=predictions
-        accuracy_list.append((answers['1A: datasets'][dataset_key][0],answers['1A: datasets'][dataset_key][1]))
-        accuracy_list.append(data_cluster)
-        Kmeans_dict_plotting[dataset_key]=accuracy_list
+    for dataset_key, dataset_value in answers['1A: datasets'].items():
+        data_cluster = {}
+        for count_cluster in [2, 3, 5, 10]:
+            predictions = dct(dataset_value[0], dataset_value[1], count_cluster, 42)
+            data_cluster[count_cluster] = predictions
+        accuracy_list = [(dataset_value[0], dataset_value[1]), data_cluster]
+        Kmeans_dict_plotting[dataset_key] = accuracy_list
 
-    myplt.plot_part1C(Kmeans_dict_plotting,'part1Question3.jpg')
+    myplt.plot_part1C(Kmeans_dict_plotting,'part1C.jpg')
 
 
     # dct value: return a dictionary of one or more abbreviated dataset names (zero or more elements) 
@@ -124,16 +122,14 @@ def compute():
     # The plot is part of your report, a pdf file name "report.pdf", in your repository.
 
     Kmeans_dict_plotting={}
-    for dataset_key in answers['1A: datasets'].keys():
-        accuracy_list=[]
-        data_cluster={}
-        for count_cluster in [2,3]:
-            predictions=results_from_fit(answers['1A: datasets'][dataset_key][0],answers['1A: datasets'][dataset_key][1],count_cluster,42)
-            data_cluster[count_cluster]=predictions
-        accuracy_list.append((answers['1A: datasets'][dataset_key][0],answers['1A: datasets'][dataset_key][1]))
-        accuracy_list.append(data_cluster)
-        Kmeans_dict_plotting[dataset_key]=accuracy_list
-    myplt.plot_part1C(Kmeans_dict_plotting,'part1Question4.jpg')
+    for dataset_key, dataset_value in answers['1A: datasets'].items():
+        data_cluster = {}
+        for count_cluster in [2, 3]:
+            predictions = results_from_fit(dataset_value[0], dataset_value[1], count_cluster, 42)
+            data_cluster[count_cluster] = predictions
+        accuracy_list = [(dataset_value[0], dataset_value[1]), data_cluster]
+        Kmeans_dict_plotting[dataset_key] = accuracy_list
+    myplt.plot_part1C(Kmeans_dict_plotting,'part1D.jpg')
 
     dct = answers["1D: datasets sensitive to initialization"] = ["nc","nm"]
 
