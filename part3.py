@@ -28,16 +28,10 @@ Recall from lecture that agglomerative hierarchical clustering is a greedy itera
 # the question asked.
 
 
-def data_index_function(data,index_set_I,index_set_J):
-    indices=[]
-    for i in index_set_I:
-        indices.append(data[i])
-    for j in index_set_J:
-        indices.append(data[j])
+def data_index_function(data, index_I, index_J):
+    indices = [data[index] for index in index_I + index_J]
     dist_matrix = pdist(data, metric='euclidean')
-
     Z = linkage(dist_matrix, method='single')
-
     dissimilarities = Z[:, 2]
 
     return dissimilarities
@@ -49,7 +43,7 @@ def compute():
     """
     A.	Load the provided dataset “hierachal_toy_data.mat” using the scipy.io.loadmat function.
     """
-    dataset=io.loadmat(“hierachal_toy_data.mat”)
+    dataset=io.loadmat("hierarchical_toy_data.mat")
     # return value of scipy.io.loadmat()
     answers["3A: toy data"] = dataset
 
@@ -58,13 +52,13 @@ def compute():
     """
     Z = linkage(dataset['X'], 'single')
     fig = plt.figure(figsize=(25, 10))
-    dn = dendrogram(Z)
+    dendo = dendrogram(Z)
     plt.savefig('part3A.png')
 
     # Answer: NDArray
     answers["3B: linkage"] = Z
     # Answer: the return value of the dendogram function, dicitonary
-    answers["3B: dendogram"] = dn
+    answers["3B: dendogram"] = dendo
 
     """
     C.	Consider the merger of the cluster corresponding to points with index sets {I={8,2,13}} J={1,9}}. At what iteration (starting from 0) were these clusters merged? That is, what row does the merger of A correspond to in the linkage matrix Z? The rows count from 0. 
@@ -78,6 +72,7 @@ def compute():
     """
     # Answer type: a function defined above
     answers["3D: function"] = data_index_function
+
 
     """
     E.	In the actual algorithm, deciding which clusters to merge should consider all of the available clusters at each iteration. List all the clusters as index sets, using a list of lists, 
