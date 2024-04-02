@@ -98,7 +98,7 @@ def compute():
     sse_values = fit_kmeans(X_data, 8)[1]  # Pass 8 as the maximum number of clusters
     sse_vs_k_values = [[x, y] for x, y in zip(range(1, 9), sse_values)]
     plt.plot(np.array(sse_vs_k_values)[:, 1])
-    plt.savefig("part2Question3.png")
+    plt.savefig("part2C.png")
 
     result_dict = answers["2C: SSE plot"] = sse_vs_k_values
 
