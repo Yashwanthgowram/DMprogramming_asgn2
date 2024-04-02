@@ -95,9 +95,14 @@ def compute():
     """
     C.	Plot the SSE as a function of k for k=1,2,….,8, and choose the optimal k based on the elbow method.
     """
-    sse_values = fit_kmeans(X_data, 8)[1]  # Pass 8 as the maximum number of clusters
-    sse_vs_k_values = [[x, y] for x, y in zip(range(1, 9), sse_values)]
-    plt.plot(np.array(sse_vs_k_values)[:, 1])
+    sse_values = fit_kmeans(X_data, 8)[1]
+    k_values = range(1, 9)
+
+    plt.plot(k_values, sse_values, marker='o')
+    plt.title('SSE vs. Number of Clusters')
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('SSE')
+    plt.grid(True)
     plt.savefig("part2C.png")
 
     result_dict = answers["2C: SSE plot"] = sse_vs_k_values
