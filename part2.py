@@ -98,7 +98,9 @@ def compute():
     sse_values = fit_kmeans(X_data, 8)[1]
     k_values = range(1, 9)
 
-    plt.plot(k_values, sse_values, marker='o')
+    sse_values = fit_kmeans(X_data, 8)[1]
+    sse_vs_k_values = [[x, y] for x, y in zip(range(1, 9), sse_values)]
+    plt.plot(np.array(sse_vs_k_values)[:, 0], np.array(sse_vs_k_values)[:, 1], marker='o')
     plt.title('SSE vs. Number of Clusters')
     plt.xlabel('Number of Clusters')
     plt.ylabel('SSE')
