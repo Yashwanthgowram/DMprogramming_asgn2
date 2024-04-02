@@ -8,8 +8,8 @@ from sklearn.neighbors import kneighbors_graph
 from sklearn.preprocessing import StandardScaler
 from itertools import cycle, islice
 import scipy.io as io
-from scipy.spatial.distance import pdist, squareform
 from scipy.cluster.hierarchy import dendrogram, linkage  #
+from scipy.spatial.distance import pdist
 
 # import plotly.figure_factory as ff
 import math
@@ -28,21 +28,19 @@ Recall from lecture that agglomerative hierarchical clustering is a greedy itera
 # the question asked.
 
 
-def data_index_function(data, index_set_I, index_set_J):
-    selected_indices = []
+def data_index_function(data,index_set_I,index_set_J):
+    indices=[]
     for i in index_set_I:
-        selected_indices.append(data[i])
+        indices.append(data[i])
     for j in index_set_J:
-        selected_indices.append(data[j])
+        indices.append(data[j])
+    dist_matrix = pdist(data, metric='euclidean')
 
-    distance_matrix = squareform(pdist(selected_indices, metric='euclidean'))
+    Z = linkage(dist_matrix, method='single')
 
-    linkage_matrix = linkage(distance_matrix, method='single')
-
-    dissimilarities = linkage_matrix[:, 2]
+    dissimilarities = Z[:, 2]
 
     return dissimilarities
-
 
 
 def compute():
@@ -51,42 +49,35 @@ def compute():
     """
     A.	Load the provided dataset “hierachal_toy_data.mat” using the scipy.io.loadmat function.
     """
-
-    dataset = io.loadmat(“hierachal_toy_data.mat”)
-
+    dataset=io.loadmat(“hierachal_toy_data.mat”)
     # return value of scipy.io.loadmat()
     answers["3A: toy data"] = dataset
 
     """
     B.	Create a linkage matrix Z, and plot a dendrogram using the scipy.hierarchy.linkage and scipy.hierachy.dendrogram functions, with “single” linkage.
     """
-    Z= linkage(dataset['X'], 'single')
+    Z = linkage(dataset['X'], 'single')
     fig = plt.figure(figsize=(25, 10))
-    dendrogram_data = dendrogram(Z)
+    dn = dendrogram(Z)
     plt.savefig('part3A.png')
-    
 
     # Answer: NDArray
     answers["3B: linkage"] = Z
-    print(Z)
-
     # Answer: the return value of the dendogram function, dicitonary
-    answers["3B: dendogram"] = dendrogram_data
+    answers["3B: dendogram"] = dn
 
     """
     C.	Consider the merger of the cluster corresponding to points with index sets {I={8,2,13}} J={1,9}}. At what iteration (starting from 0) were these clusters merged? That is, what row does the merger of A correspond to in the linkage matrix Z? The rows count from 0. 
     """
 
     # Answer type: integer
-    answers["3C: iteration"] = 4 
+    answers["3C: iteration"] = 4
 
     """
     D.	Write a function that takes the data and the two index sets {I,J} above, and returns the dissimilarity given by single link clustering using the Euclidian distance metric. The function should output the same value as the 3rd column of the row found in problem 2.C.
     """
     # Answer type: a function defined above
     answers["3D: function"] = data_index_function
-    ##answers["3D: function"] = data_index_function(dataset['X'],I={8,2,13},J={1,9})
-    ##print(answers["3D: function"])
 
     """
     E.	In the actual algorithm, deciding which clusters to merge should consider all of the available clusters at each iteration. List all the clusters as index sets, using a list of lists, 
