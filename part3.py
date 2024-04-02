@@ -8,7 +8,7 @@ from sklearn.neighbors import kneighbors_graph
 from sklearn.preprocessing import StandardScaler
 from itertools import cycle, islice
 import scipy.io as io
-from scipy.spatial.distance import pdist
+from scipy.spatial.distance import pdist, squareform
 from scipy.cluster.hierarchy import dendrogram, linkage  #
 
 # import plotly.figure_factory as ff
@@ -28,13 +28,20 @@ Recall from lecture that agglomerative hierarchical clustering is a greedy itera
 # the question asked.
 
 
-def data_index_function(data, I, J):
-    
-    combined_data = [data[i] for i in I | J]
-    distance_matrix = pdist(combined_data, metric='euclidean')
-    Z = linkage(distance_matrix, method='single')
-    dissimilarity = Z[-1, 2]  # Dissimilarity is the last entry in the linkage matrix
-    return dissimilarity
+def data_index_function(data, index_set_I, index_set_J):
+    selected_indices = []
+    for i in index_set_I:
+        selected_indices.append(data[i])
+    for j in index_set_J:
+        selected_indices.append(data[j])
+
+    distance_matrix = squareform(pdist(selected_indices, metric='euclidean'))
+
+    linkage_matrix = linkage(distance_matrix, method='single')
+
+    dissimilarities = linkage_matrix[:, 2]
+
+    return dissimilarities
 
 
 
@@ -56,7 +63,7 @@ def compute():
     Z= linkage(dataset['X'], 'single')
     fig = plt.figure(figsize=(25, 10))
     dendrogram_data = dendrogram(Z)
-    plt.savefig('part3_questionA.png')
+    plt.savefig('part3A.png')
     
 
     # Answer: NDArray
@@ -78,8 +85,8 @@ def compute():
     """
     # Answer type: a function defined above
     answers["3D: function"] = data_index_function
-    answers["3D: function"] = data_index_function(dataset['X'],I={8,2,13},J={1,9})
-    print(answers["3D: function"])
+    ##answers["3D: function"] = data_index_function(dataset['X'],I={8,2,13},J={1,9})
+    ##print(answers["3D: function"])
 
     """
     E.	In the actual algorithm, deciding which clusters to merge should consider all of the available clusters at each iteration. List all the clusters as index sets, using a list of lists, 
